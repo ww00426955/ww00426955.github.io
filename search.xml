@@ -1,39 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
-  
-  
-    
-    <entry>
-      <title></title>
-      <link href="/2019/07/19/daad/"/>
-      <url>/2019/07/19/daad/</url>
-      
-        <content type="html"><![CDATA[<p>宝贝，我爱你！</p>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>安娜</title>
-      <link href="/2019/07/19/%E5%AE%89%E5%A8%9C/"/>
-      <url>/2019/07/19/%E5%AE%89%E5%A8%9C/</url>
-      
-        <content type="html"><![CDATA[<p>宝贝，我爱你！</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 个人 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-  
-  
+<search>
+  <entry>
+    <title><![CDATA[分割算法loss综述赵威]]></title>
+    <url>%2F2019%2F07%2F19%2F%E6%B5%8B%E8%AF%95%2F</url>
+    <content type="text"><![CDATA[交叉熵loss]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>哈哈哈</tag>
+      </tags>
+  </entry>
 </search>
