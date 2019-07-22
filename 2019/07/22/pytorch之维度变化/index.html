@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="哈库呐 玛塔塔">
+<meta name="description" content="reshape、view和transpose、permute的区别 reshape和view只是变换形状,而transpose和permute是变换维度，变换结果不一样！ reshape和view变换后的得到的tensor都是连续的，而transpose和permute是不连续的 若x是连续的tensor，则x的改变都会影响以上的变换结果，因为都不是x的副本">
 <meta name="keywords" content="深度学习">
-<meta property="og:type" content="website">
-<meta property="og:title" content="zhaowei&#39;s Blog">
-<meta property="og:url" content="https://ww00426955.github.io/categories/深度学习/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pytorch之维度变化">
+<meta property="og:url" content="https://ww00426955.github.io/2019/07/22/pytorch之维度变化/index.html">
 <meta property="og:site_name" content="zhaowei&#39;s Blog">
-<meta property="og:description" content="哈库呐 玛塔塔">
+<meta property="og:description" content="reshape、view和transpose、permute的区别 reshape和view只是变换形状,而transpose和permute是变换维度，变换结果不一样！ reshape和view变换后的得到的tensor都是连续的，而transpose和permute是不连续的 若x是连续的tensor，则x的改变都会影响以上的变换结果，因为都不是x的副本">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-22T10:32:23.769Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zhaowei&#39;s Blog">
-<meta name="twitter:description" content="哈库呐 玛塔塔">
+<meta name="twitter:title" content="pytorch之维度变化">
+<meta name="twitter:description" content="reshape、view和transpose、permute的区别 reshape和view只是变换形状,而transpose和permute是变换维度，变换结果不一样！ reshape和view变换后的得到的tensor都是连续的，而transpose和permute是不连续的 若x是连续的tensor，则x的改变都会影响以上的变换结果，因为都不是x的副本">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://ww00426955.github.io/categories/深度学习/">
+  <link rel="canonical" href="https://ww00426955.github.io/2019/07/22/pytorch之维度变化/">
 
 
 
 
 
-  <title>分类: 深度学习 | zhaowei's Blog</title>
+  <title>pytorch之维度变化 | zhaowei's Blog</title>
   
 
 
@@ -144,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -160,7 +161,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle">hah</p>
+        <p class="site-subtitle">哈库呐 玛塔塔</p>
       
   </div>
 
@@ -280,53 +281,171 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block category">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>深度学习<small>分类</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://ww00426955.github.io/2019/07/22/pytorch之维度变化/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ww">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/avatar/ww.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhaowei's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/07/21/NLL和CrossEntropyLoss/" itemprop="url">
-              
-                <span itemprop="name">NLL和CrossEntropyLoss</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">pytorch之维度变化</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-07-21T16:05:28+08:00" content="2019-07-21">
-          07-21
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-22T18:32:29+08:00">
+                2019-07-22
+              </time>
+            
 
-    </header>
-  </article>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="reshape、view和transpose、permute的区别"><a href="#reshape、view和transpose、permute的区别" class="headerlink" title="reshape、view和transpose、permute的区别"></a>reshape、view和transpose、permute的区别</h2><ul>
+<li>reshape和view只是变换形状,而transpose和permute是变换维度，变换结果不一样！</li>
+<li>reshape和view变换后的得到的tensor都是连续的，而transpose和permute是不连续的</li>
+<li>若x是连续的tensor，则x的改变都会影响以上的变换结果，因为都不是x的副本</li>
+</ul>
+<a id="more"></a>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">torch.manual_seed(<span class="number">1</span>)</span><br><span class="line">x = torch.randint(<span class="number">0</span>, <span class="number">2</span>, (<span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">y_reshape = x.reshape(<span class="number">3</span>, <span class="number">2</span>)</span><br><span class="line">y_view = x.view(<span class="number">3</span>, <span class="number">2</span>)</span><br><span class="line">print(y_reshape.is_contiguous())  <span class="comment"># True</span></span><br><span class="line">print(y_view.is_contiguous())  <span class="comment"># True</span></span><br><span class="line"></span><br><span class="line">y_transpose = x.transpose(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">y_permute = x.permute(<span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">print(y_transpose.is_contiguous())  <span class="comment"># False</span></span><br><span class="line">print(y_permute.is_contiguous())  <span class="comment"># False</span></span><br><span class="line"></span><br><span class="line">x[<span class="number">1</span>, <span class="number">1</span>] = <span class="number">99</span></span><br><span class="line">print(x)</span><br><span class="line"><span class="comment"># tensor([[ 1,  1,  0],</span></span><br><span class="line"><span class="comment">#         [ 0, 99,  1]])</span></span><br><span class="line">print(y_reshape)</span><br><span class="line"><span class="comment"># tensor([[ 1,  1],</span></span><br><span class="line"><span class="comment">#         [ 0,  0],</span></span><br><span class="line"><span class="comment">#         [99,  1]])</span></span><br><span class="line">print(y_view)</span><br><span class="line"><span class="comment"># tensor([[ 1,  1],</span></span><br><span class="line"><span class="comment">#         [ 0,  0],</span></span><br><span class="line"><span class="comment">#         [99,  1]])</span></span><br><span class="line">print(y_transpose)</span><br><span class="line"><span class="comment"># tensor([[ 1,  0],</span></span><br><span class="line"><span class="comment">#         [ 1, 99],</span></span><br><span class="line"><span class="comment">#         [ 0,  1]])</span></span><br><span class="line">print(y_permute)</span><br><span class="line"><span class="comment"># tensor([[ 1,  0],</span></span><br><span class="line"><span class="comment">#         [ 1, 99],</span></span><br><span class="line"><span class="comment">#         [ 0,  1]])</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="reshape和view的区别"><a href="#reshape和view的区别" class="headerlink" title="reshape和view的区别"></a>reshape和view的区别</h2><p><strong>实验一</strong>：</p>
+<ul>
+<li><p>view使用前要求tensor是连续contiguous的，</p>
+<p>若tensor是不连续的，则view之前必须调用<code>contiguous()</code>方法使之变成连续的tensor</p>
+</li>
+<li><p>permute之后使用contiguous()：</p>
+<p>返回的tensor是x的copy，x变化时，不会随着改变</p>
+<p>返回的tensor是连续的，可以接着使用view变换</p>
+</li>
+<li><p>若<code>y_permute = x.permute(1, 0).contiguous()</code>改为<code>y_permute = x.permute(1, 0)</code>则结论和上述相反，x变化，y_permute跟着变化，view不可以接着使用</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">torch.manual_seed(<span class="number">1</span>)</span><br><span class="line">x = torch.randint(<span class="number">0</span>, <span class="number">2</span>, (<span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">y_permute = x.permute(<span class="number">1</span>, <span class="number">0</span>).contiguous()</span><br><span class="line">print(y_permute.is_contiguous())  <span class="comment"># True</span></span><br><span class="line"></span><br><span class="line">x[<span class="number">1</span>, <span class="number">1</span>] = <span class="number">99</span></span><br><span class="line">print(x)</span><br><span class="line"><span class="comment"># tensor([[ 1,  1,  0],</span></span><br><span class="line"><span class="comment">#         [ 0, 99,  1]])</span></span><br><span class="line">print(y_permute)</span><br><span class="line"><span class="comment"># tensor([[1, 0],</span></span><br><span class="line"><span class="comment">#         [1, 1],</span></span><br><span class="line"><span class="comment">#         [0, 1]])</span></span><br><span class="line"></span><br><span class="line">y_view = y_permute.view(<span class="number">-1</span>)</span><br><span class="line">print(y_view)</span><br><span class="line"><span class="comment"># tensor([1, 0, 1, 1, 0, 1])</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>实验二：</strong></p>
+<ul>
+<li>tensor是不连续的时候，reshape依然会返回新的copy，view报错</li>
+<li>tensor是连续的时候，view和reshape都不返回新的copy，跟随改变</li>
+<li>view和reshape最终返回的一定是连续的tensor</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">torch.manual_seed(<span class="number">1</span>)</span><br><span class="line">x = torch.randint(<span class="number">0</span>, <span class="number">2</span>, (<span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">y_permute = x.permute(<span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">print(y_permute.is_contiguous())  <span class="comment"># False</span></span><br><span class="line"></span><br><span class="line">y_reshape = y_permute.reshape(<span class="number">1</span>, <span class="number">6</span>)</span><br><span class="line">print(y_reshape.is_contiguous())  <span class="comment"># True</span></span><br><span class="line"></span><br><span class="line">x[<span class="number">1</span>, <span class="number">1</span>] = <span class="number">99</span></span><br><span class="line">print(x)</span><br><span class="line"><span class="comment"># tensor([[ 1,  1,  0],</span></span><br><span class="line"><span class="comment">#         [ 0, 99,  1]])</span></span><br><span class="line">print(y_permute)</span><br><span class="line"><span class="comment"># tensor([[ 1,  0],</span></span><br><span class="line"><span class="comment">#         [ 1, 99],</span></span><br><span class="line"><span class="comment">#         [ 0,  1]])</span></span><br><span class="line">print(y_reshape)</span><br><span class="line"><span class="comment"># tensor([[1, 0, 1, 1, 0, 1]])</span></span><br></pre></td></tr></table></figure>
 
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/22/torch.gather/" rel="next" title="torch.gather用法">
+                <i class="fa fa-chevron-left"></i> torch.gather用法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -334,6 +453,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -354,15 +477,24 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image" src="/avatar/ww.jpg" alt="zhaowei">
+              <img class="site-author-image" itemprop="image" src="/avatar/ww.jpg" alt="ww">
             
-              <p class="site-author-name" itemprop="name">zhaowei</p>
-              <p class="site-description motion-element" itemprop="description">哈库呐 玛塔塔</p>
+              <p class="site-author-name" itemprop="name">ww</p>
+              <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
           <nav class="site-state motion-element">
@@ -372,7 +504,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -434,6 +566,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#reshape、view和transpose、permute的区别"><span class="nav-number">1.</span> <span class="nav-text">reshape、view和transpose、permute的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reshape和view的区别"><span class="nav-number">2.</span> <span class="nav-text">reshape和view的区别</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -451,7 +599,7 @@
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">zhaowei</span>
+  <span class="author" itemprop="copyrightHolder">ww</span>
 
   
 </div>
@@ -573,6 +721,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
