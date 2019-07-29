@@ -79,18 +79,30 @@
 
 
 
-<meta name="description" content="reshape、view和transpose、permute的区别 reshape和view只是变换形状,而transpose和permute是变换维度，变换结果不一样！ reshape和view变换后的得到的tensor都是连续的，而transpose和permute是不连续的 若x是连续的tensor，则x的改变都会影响以上的变换结果，因为都不是x的副本">
+<meta name="description" content="参考  https://zhuanlan.zhihu.com/p/26138673  动机 一般来说，如果模型的输入特征不相关且满足标准正态分布时，模型的表现一般较好。在训练神经网络模型时，通过事先将特征去相关并使得它们满足一个比较好的分布，这样，模型的第一层网络一般都会有一个比较好的输入特征。但是随着模型的层数加深，网络的非线性变换使得每一层的结果变得相关了，且不再满足分布。更糟糕的是，可能这些">
 <meta name="keywords" content="深度学习">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pytorch之维度变化">
-<meta property="og:url" content="https://ww00426955.github.io/2019/07/22/pytorch之维度变化/index.html">
+<meta property="og:title" content="BatchNorm总结">
+<meta property="og:url" content="https://ww00426955.github.io/2019/07/29/BN总结/index.html">
 <meta property="og:site_name" content="zhaowei&#39;s Blog">
-<meta property="og:description" content="reshape、view和transpose、permute的区别 reshape和view只是变换形状,而transpose和permute是变换维度，变换结果不一样！ reshape和view变换后的得到的tensor都是连续的，而transpose和permute是不连续的 若x是连续的tensor，则x的改变都会影响以上的变换结果，因为都不是x的副本">
+<meta property="og:description" content="参考  https://zhuanlan.zhihu.com/p/26138673  动机 一般来说，如果模型的输入特征不相关且满足标准正态分布时，模型的表现一般较好。在训练神经网络模型时，通过事先将特征去相关并使得它们满足一个比较好的分布，这样，模型的第一层网络一般都会有一个比较好的输入特征。但是随着模型的层数加深，网络的非线性变换使得每一层的结果变得相关了，且不再满足分布。更糟糕的是，可能这些">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-22T10:32:23.769Z">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=N%280%2C+1%29">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=N%280%2C+1%29">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmu_%5Cmathcal%7BB%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Csigma%5E2_%5Cmathcal%7BB%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cgamma">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbeta">
+<meta property="og:image" content="https://i.loli.net/2019/07/24/5d3822c03453942502.png">
+<meta property="og:image" content="https://i.loli.net/2019/07/24/5d38419d9db9a53501.png">
+<meta property="og:image" content="https://i.loli.net/2019/07/29/5d3e58d0d51e293325.png">
+<meta property="og:image" content="https://i.loli.net/2019/07/24/5d384130e8f4b73388.png">
+<meta property="og:image" content="https://i.loli.net/2019/07/24/5d384b44dea2a60725.png">
+<meta property="og:updated_time" content="2019-07-29T03:28:45.148Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pytorch之维度变化">
-<meta name="twitter:description" content="reshape、view和transpose、permute的区别 reshape和view只是变换形状,而transpose和permute是变换维度，变换结果不一样！ reshape和view变换后的得到的tensor都是连续的，而transpose和permute是不连续的 若x是连续的tensor，则x的改变都会影响以上的变换结果，因为都不是x的副本">
+<meta name="twitter:title" content="BatchNorm总结">
+<meta name="twitter:description" content="参考  https://zhuanlan.zhihu.com/p/26138673  动机 一般来说，如果模型的输入特征不相关且满足标准正态分布时，模型的表现一般较好。在训练神经网络模型时，通过事先将特征去相关并使得它们满足一个比较好的分布，这样，模型的第一层网络一般都会有一个比较好的输入特征。但是随着模型的层数加深，网络的非线性变换使得每一层的结果变得相关了，且不再满足分布。更糟糕的是，可能这些">
+<meta name="twitter:image" content="https://www.zhihu.com/equation?tex=N%280%2C+1%29">
 
 
 
@@ -120,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="https://ww00426955.github.io/2019/07/22/pytorch之维度变化/">
+  <link rel="canonical" href="https://ww00426955.github.io/2019/07/29/BN总结/">
 
 
 
 
 
-  <title>pytorch之维度变化 | zhaowei's Blog</title>
+  <title>BatchNorm总结 | zhaowei's Blog</title>
   
 
 
@@ -295,7 +307,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://ww00426955.github.io/2019/07/22/pytorch之维度变化/">
+    <link itemprop="mainEntityOfPage" href="https://ww00426955.github.io/2019/07/29/BN总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ww">
@@ -312,7 +324,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">pytorch之维度变化</h1>
+          <h1 class="post-title" itemprop="name headline">BatchNorm总结</h1>
         
 
         <div class="post-meta">
@@ -324,8 +336,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-22T18:32:29+08:00">
-                2019-07-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-29T11:29:17+08:00">
+                2019-07-29
               </time>
             
 
@@ -362,37 +374,71 @@
       
 
       
-        <h2 id="reshape、view和transpose、permute的区别"><a href="#reshape、view和transpose、permute的区别" class="headerlink" title="reshape、view和transpose、permute的区别"></a>reshape、view和transpose、permute的区别</h2><ul>
-<li>reshape和view只是变换形状,而transpose和permute是变换维度，变换结果不一样！</li>
-<li>reshape和view变换后的得到的tensor都是连续的，而transpose和permute是不连续的</li>
-<li>若x是连续的tensor，则x的改变都会影响以上的变换结果，因为都不是x的副本</li>
+        <p>参考</p>
+<blockquote>
+<p><a href="https://zhuanlan.zhihu.com/p/26138673" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/26138673</a></p>
+</blockquote>
+<h2 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h2><ul>
+<li>一般来说，如果模型的输入特征不相关且满足标准正态分布<img src="https://www.zhihu.com/equation?tex=N%280%2C+1%29" alt="[公式]">时，模型的表现一般较好。在训练神经网络模型时，通过事先将特征去相关并使得它们满足一个比较好的分布，这样，模型的第一层网络一般都会有一个比较好的输入特征。但是随着模型的层数加深，网络的非线性变换使得每一层的结果变得相关了，且不再满足<img src="https://www.zhihu.com/equation?tex=N%280%2C+1%29" alt="[公式]">分布。更糟糕的是，可能这些隐藏层的特征分布已经发生了偏移。</li>
+<li>论文的作者认为上面的问题，导致神经网络的训练变得困难。基于此，提出了在层和层之间加入Batch Normalization层来解决这一问题。</li>
+<li>训练时，BN层利用隐藏层输出结果的均值<img src="https://www.zhihu.com/equation?tex=%5Cmu_%5Cmathcal%7BB%7D" alt="[公式]">与方差<img src="https://www.zhihu.com/equation?tex=%5Csigma%5E2_%5Cmathcal%7BB%7D" alt="[公式]">来标准化每一层特征的分布，并且<strong>维护所有</strong>mini-batch数据的均值与方差，最后利用样本的均值与方差的<strong>无偏估计量</strong>用于测试时使用。</li>
+<li>鉴于在某些情况下非标准化分布的层特征可能是最优，标准化每一层的输出特征反而会使得网络的表达能力变差，因此添加两个可学习的缩放参数<img src="https://www.zhihu.com/equation?tex=%5Cgamma" alt="[公式]">和偏移参数<img src="https://www.zhihu.com/equation?tex=%5Cbeta" alt="[公式]">来允许模型<strong>自适应地调整层特征分布</strong>。</li>
 </ul>
 <a id="more"></a>
 
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">torch.manual_seed(<span class="number">1</span>)</span><br><span class="line">x = torch.randint(<span class="number">0</span>, <span class="number">2</span>, (<span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">y_reshape = x.reshape(<span class="number">3</span>, <span class="number">2</span>)</span><br><span class="line">y_view = x.view(<span class="number">3</span>, <span class="number">2</span>)</span><br><span class="line">print(y_reshape.is_contiguous())  <span class="comment"># True</span></span><br><span class="line">print(y_view.is_contiguous())  <span class="comment"># True</span></span><br><span class="line"></span><br><span class="line">y_transpose = x.transpose(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">y_permute = x.permute(<span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">print(y_transpose.is_contiguous())  <span class="comment"># False</span></span><br><span class="line">print(y_permute.is_contiguous())  <span class="comment"># False</span></span><br><span class="line"></span><br><span class="line">x[<span class="number">1</span>, <span class="number">1</span>] = <span class="number">99</span></span><br><span class="line">print(x)</span><br><span class="line"><span class="comment"># tensor([[ 1,  1,  0],</span></span><br><span class="line"><span class="comment">#         [ 0, 99,  1]])</span></span><br><span class="line">print(y_reshape)</span><br><span class="line"><span class="comment"># tensor([[ 1,  1],</span></span><br><span class="line"><span class="comment">#         [ 0,  0],</span></span><br><span class="line"><span class="comment">#         [99,  1]])</span></span><br><span class="line">print(y_view)</span><br><span class="line"><span class="comment"># tensor([[ 1,  1],</span></span><br><span class="line"><span class="comment">#         [ 0,  0],</span></span><br><span class="line"><span class="comment">#         [99,  1]])</span></span><br><span class="line">print(y_transpose)</span><br><span class="line"><span class="comment"># tensor([[ 1,  0],</span></span><br><span class="line"><span class="comment">#         [ 1, 99],</span></span><br><span class="line"><span class="comment">#         [ 0,  1]])</span></span><br><span class="line">print(y_permute)</span><br><span class="line"><span class="comment"># tensor([[ 1,  0],</span></span><br><span class="line"><span class="comment">#         [ 1, 99],</span></span><br><span class="line"><span class="comment">#         [ 0,  1]])</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="reshape和view的区别"><a href="#reshape和view的区别" class="headerlink" title="reshape和view的区别"></a>reshape和view的区别</h2><p><strong>实验一</strong>：</p>
+<h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><ul>
+<li>模型训练收敛的速度更快</li>
+<li>模型隐藏输出特征的分布更稳定，更利于模型的学习，达到更高的准确率</li>
+</ul>
+<h2 id="公式推导"><a href="#公式推导" class="headerlink" title="公式推导"></a>公式推导</h2><ul>
+<li>前向传播</li>
+</ul>
+<p><img src="https://i.loli.net/2019/07/24/5d3822c03453942502.png" alt="BN公式"></p>
+<p><img src="https://i.loli.net/2019/07/24/5d38419d9db9a53501.png" alt></p>
 <ul>
-<li><p>view使用前要求tensor是连续contiguous的，</p>
-<p>若tensor是不连续的，则view之前必须调用<code>contiguous()</code>方法使之变成连续的tensor</p>
+<li>反向传播</li>
+</ul>
+<p><img src="https://i.loli.net/2019/07/29/5d3e58d0d51e293325.png" alt></p>
+<h2 id="两种模式"><a href="#两种模式" class="headerlink" title="两种模式"></a>两种模式</h2><p><strong>训练模式：</strong></p>
+<ul>
+<li><p>滑动平均</p>
+<ul>
+<li>滑动平均(exponential moving average)，或者叫做指数加权平均(exponentially weighted moving average)，可以用来估计变量的局部均值，使得变量的更新与一段时间内的历史取值有关</li>
+<li>占内存少，不需要保存过去10个或者100个历史值，就能够估计均值。（当然，滑动平均不如将历史值全保存下来计算均值准确，但后者占用更多内存和计算成本更高）</li>
+</ul>
 </li>
-<li><p>permute之后使用contiguous()：</p>
-<p>返回的tensor是x的copy，x变化时，不会随着改变</p>
-<p>返回的tensor是连续的，可以接着使用view变换</p>
+<li><p>计算当前Batch的均值和方差，然后使用滑动平均策略来更新：<code>running_mean</code>和<code>running_var</code></p>
+<p><img src="https://i.loli.net/2019/07/24/5d384130e8f4b73388.png" alt></p>
 </li>
-<li><p>若<code>y_permute = x.permute(1, 0).contiguous()</code>改为<code>y_permute = x.permute(1, 0)</code>则结论和上述相反，x变化，y_permute跟着变化，view不可以接着使用</p>
+<li><p>有2*feature_num个可以学习的参数γ和β</p>
 </li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">torch.manual_seed(<span class="number">1</span>)</span><br><span class="line">x = torch.randint(<span class="number">0</span>, <span class="number">2</span>, (<span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">y_permute = x.permute(<span class="number">1</span>, <span class="number">0</span>).contiguous()</span><br><span class="line">print(y_permute.is_contiguous())  <span class="comment"># True</span></span><br><span class="line"></span><br><span class="line">x[<span class="number">1</span>, <span class="number">1</span>] = <span class="number">99</span></span><br><span class="line">print(x)</span><br><span class="line"><span class="comment"># tensor([[ 1,  1,  0],</span></span><br><span class="line"><span class="comment">#         [ 0, 99,  1]])</span></span><br><span class="line">print(y_permute)</span><br><span class="line"><span class="comment"># tensor([[1, 0],</span></span><br><span class="line"><span class="comment">#         [1, 1],</span></span><br><span class="line"><span class="comment">#         [0, 1]])</span></span><br><span class="line"></span><br><span class="line">y_view = y_permute.view(<span class="number">-1</span>)</span><br><span class="line">print(y_view)</span><br><span class="line"><span class="comment"># tensor([1, 0, 1, 1, 0, 1])</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>实验二：</strong></p>
+<p><strong>测试模式：</strong></p>
 <ul>
-<li>tensor是不连续的时候，reshape依然会返回新的copy，view报错</li>
-<li>tensor是连续的时候，view和reshape都不返回新的copy，跟随改变</li>
-<li>view和reshape最终返回的一定是连续的tensor</li>
+<li>使用训练得到的<code>running_mean</code>和<code>running_var</code>，作为样本的统计量，进行前向计算</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">torch.manual_seed(<span class="number">1</span>)</span><br><span class="line">x = torch.randint(<span class="number">0</span>, <span class="number">2</span>, (<span class="number">2</span>, <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">y_permute = x.permute(<span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">print(y_permute.is_contiguous())  <span class="comment"># False</span></span><br><span class="line"></span><br><span class="line">y_reshape = y_permute.reshape(<span class="number">1</span>, <span class="number">6</span>)</span><br><span class="line">print(y_reshape.is_contiguous())  <span class="comment"># True</span></span><br><span class="line"></span><br><span class="line">x[<span class="number">1</span>, <span class="number">1</span>] = <span class="number">99</span></span><br><span class="line">print(x)</span><br><span class="line"><span class="comment"># tensor([[ 1,  1,  0],</span></span><br><span class="line"><span class="comment">#         [ 0, 99,  1]])</span></span><br><span class="line">print(y_permute)</span><br><span class="line"><span class="comment"># tensor([[ 1,  0],</span></span><br><span class="line"><span class="comment">#         [ 1, 99],</span></span><br><span class="line"><span class="comment">#         [ 0,  1]])</span></span><br><span class="line">print(y_reshape)</span><br><span class="line"><span class="comment"># tensor([[1, 0, 1, 1, 0, 1]])</span></span><br></pre></td></tr></table></figure>
+<h2 id="代码验证："><a href="#代码验证：" class="headerlink" title="代码验证："></a>代码验证：</h2><ul>
+<li><p>若输入维度为：B×C×H×W，则BN计算的是B×H×W个值的均值和方差</p>
+</li>
+<li><p>BN前的卷积层不需要bias参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line">b, c, h, w = <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span></span><br><span class="line">conv_out = torch.empty((b, c, h, w)).random_(<span class="number">0</span>, <span class="number">4</span>) <span class="comment"># B*C*H*W</span></span><br><span class="line">print(<span class="string">'batch---'</span>)</span><br><span class="line">batch1 = conv_out[:, <span class="number">0</span>, :, :] <span class="comment"># B*H*W</span></span><br><span class="line">batch2 = conv_out[:, <span class="number">1</span>, :, :] <span class="comment"># B*H*W</span></span><br><span class="line">print(<span class="string">'mean: [&#123;:.4f&#125; &#123;:.4f&#125;]'</span>.format(batch1.mean().item(), batch2.mean().item()))</span><br><span class="line">print(<span class="string">'var : [&#123;:.4f&#125; &#123;:.4f&#125;]'</span>.format(batch1.var().item(), batch2.var().item()))</span><br><span class="line"></span><br><span class="line">bn = nn.BatchNorm2d(c, momentum=<span class="number">0.1</span>)</span><br><span class="line">print(<span class="string">'before BN---'</span>)</span><br><span class="line"><span class="comment"># for p in bn.parameters():</span></span><br><span class="line"><span class="comment">#     print(p)</span></span><br><span class="line">print(<span class="string">'mean: &#123;&#125;'</span>.format(bn.running_mean.numpy()))</span><br><span class="line">print(<span class="string">'var : &#123;&#125;'</span>.format(bn.running_var.numpy()))</span><br><span class="line"></span><br><span class="line">bn_out = bn(conv_out)</span><br><span class="line">print(<span class="string">'after BN once---'</span>)</span><br><span class="line">print(<span class="string">'mean: &#123;&#125;'</span>.format(bn.running_mean.numpy()))</span><br><span class="line">print(<span class="string">'var : &#123;&#125;'</span>.format(bn.running_var.numpy()))</span><br><span class="line"></span><br><span class="line">bn_out = bn(conv_out)</span><br><span class="line">print(<span class="string">'after BN twice---'</span>)</span><br><span class="line">print(<span class="string">'mean: &#123;&#125;'</span>.format(bn.running_mean.numpy()))</span><br><span class="line">print(<span class="string">'var : &#123;&#125;'</span>.format(bn.running_var.numpy()))</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实现前向和BP，根据公式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batchnorm_forward</span><span class="params">(x, gamma, beta, bn_param)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Forward pass for batch normalization.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Input:</span></span><br><span class="line"><span class="string">    - x: Data of shape (N, D)</span></span><br><span class="line"><span class="string">    - gamma: Scale parameter of shape (D,)</span></span><br><span class="line"><span class="string">    - beta: Shift paremeter of shape (D,)</span></span><br><span class="line"><span class="string">    - bn_param: Dictionary with the following keys:</span></span><br><span class="line"><span class="string">    - mode: 'train' or 'test'; required</span></span><br><span class="line"><span class="string">    - eps: Constant for numeric stability</span></span><br><span class="line"><span class="string">    - momentum: Constant for running mean / variance.</span></span><br><span class="line"><span class="string">    - running_mean: Array of shape (D,) giving running mean of features</span></span><br><span class="line"><span class="string">    - running_var Array of shape (D,) giving running variance of features</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns a tuple of:</span></span><br><span class="line"><span class="string">    - out: of shape (N, D)</span></span><br><span class="line"><span class="string">    - cache: A tuple of values needed in the backward pass</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    mode = bn_param[<span class="string">'mode'</span>]</span><br><span class="line">    eps = bn_param.get(<span class="string">'eps'</span>, <span class="number">1e-5</span>)</span><br><span class="line">    momentum = bn_param.get(<span class="string">'momentum'</span>, <span class="number">0.9</span>)</span><br><span class="line"></span><br><span class="line">    N, D = x.shape</span><br><span class="line">    running_mean = bn_param.get(<span class="string">'running_mean'</span>, np.zeros(D, dtype=x.dtype))</span><br><span class="line">    running_var = bn_param.get(<span class="string">'running_var'</span>, np.zeros(D, dtype=x.dtype))</span><br><span class="line"></span><br><span class="line">    out, cache = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> mode == <span class="string">'train'</span>:</span><br><span class="line"></span><br><span class="line">        sample_mean = np.mean(x, axis=<span class="number">0</span>)</span><br><span class="line">        sample_var = np.var(x, axis=<span class="number">0</span>)</span><br><span class="line">        out_ = (x - sample_mean) / np.sqrt(sample_var + eps)</span><br><span class="line"></span><br><span class="line">        running_mean = momentum * running_mean + (<span class="number">1</span> - momentum) * sample_mean</span><br><span class="line">        running_var = momentum * running_var + (<span class="number">1</span> - momentum) * sample_var</span><br><span class="line"></span><br><span class="line">        out = gamma * out_ + beta</span><br><span class="line">        cache = (out_, x, sample_var, sample_mean, eps, gamma, beta)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">elif</span> mode == <span class="string">'test'</span>:</span><br><span class="line"></span><br><span class="line">        scale = gamma / np.sqrt(running_var + eps)</span><br><span class="line">        out = (x - running_mean) * scale + beta</span><br><span class="line">        <span class="comment"># out = x * scale + (beta - running_mean * scale)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">'Invalid forward batchnorm mode "%s"'</span> % mode)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Store the updated running means back into bn_param</span></span><br><span class="line">    bn_param[<span class="string">'running_mean'</span>] = running_mean</span><br><span class="line">    bn_param[<span class="string">'running_var'</span>] = running_var</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> out, cache</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batchnorm_backward</span><span class="params">(dout, cache)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Backward pass for batch normalization.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Inputs:</span></span><br><span class="line"><span class="string">    - dout: Upstream derivatives, of shape (N, D)</span></span><br><span class="line"><span class="string">    - cache: Variable of intermediates from batchnorm_forward.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns a tuple of:</span></span><br><span class="line"><span class="string">    - dx: Gradient with respect to inputs x, of shape (N, D)</span></span><br><span class="line"><span class="string">    - dgamma: Gradient with respect to scale parameter gamma, of shape (D,)</span></span><br><span class="line"><span class="string">    - dbeta: Gradient with respect to shift parameter beta, of shape (D,)</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    dx, dgamma, dbeta = <span class="literal">None</span>, <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    out_, x, sample_var, sample_mean, eps, gamma, beta = cache</span><br><span class="line"></span><br><span class="line">    N = x.shape[<span class="number">0</span>]</span><br><span class="line">    dout_ = gamma * dout</span><br><span class="line">    dvar = np.sum(dout_ * (x - sample_mean) * <span class="number">-0.5</span> * (sample_var + eps) ** <span class="number">-1.5</span>, axis=<span class="number">0</span>)</span><br><span class="line">    dx_ = <span class="number">1</span> / np.sqrt(sample_var + eps)</span><br><span class="line">    dvar_ = <span class="number">2</span> * (x - sample_mean) / N</span><br><span class="line"></span><br><span class="line">    <span class="comment"># intermediate for convenient calculation</span></span><br><span class="line">    di = dout_ * dx_ + dvar * dvar_</span><br><span class="line">    dmean = <span class="number">-1</span> * np.sum(di, axis=<span class="number">0</span>)</span><br><span class="line">    dmean_ = np.ones_like(x) / N</span><br><span class="line"></span><br><span class="line">    dx = di + dmean * dmean_</span><br><span class="line">    dgamma = np.sum(dout * out_, axis=<span class="number">0</span>)</span><br><span class="line">    dbeta = np.sum(dout, axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dx, dgamma, dbeta</span><br></pre></td></tr></table></figure>
 
+</li>
+</ul>
+<h2 id="BN变种"><a href="#BN变种" class="headerlink" title="BN变种"></a>BN变种</h2><p><img src="https://i.loli.net/2019/07/24/5d384b44dea2a60725.png" alt></p>
+<ul>
+<li><p>不同的Norm本质上的区别是，用于计算均值和方差的特征点的集合不同</p>
+</li>
+<li><p>除了BN，其他的Norm都是Batch无关的</p>
+</li>
+<li><p>BN适用于判别模型，比如图像分类，由于在Batch维度进行归一化，可以认为是使用的是数据的整体分布，进而保证不同数据的分布一致性。而判别模型的结果正是取决于数据的整体分布。</p>
+</li>
+<li><p>IN适用于生成模型，如风格迁移。图片生成的结果主要依赖于单个图像实例，所以Batch的归一化操作就不适合了。在风格迁移中IN可以加速收敛，保证每个图像实例之间的独立性。 </p>
+</li>
+</ul>
 
       
     </div>
@@ -417,8 +463,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/07/22/torch.gather/" rel="next" title="torch.gather用法">
-                <i class="fa fa-chevron-left"></i> torch.gather用法
+              <a href="/2019/07/23/分类Loss总结/" rel="next" title="分类Loss总结">
+                <i class="fa fa-chevron-left"></i> 分类Loss总结
               </a>
             
           </div>
@@ -426,10 +472,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/07/23/softmaxBP推导/" rel="prev" title="反向传播推导">
-                反向传播推导 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -561,7 +603,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#reshape、view和transpose、permute的区别"><span class="nav-number">1.</span> <span class="nav-text">reshape、view和transpose、permute的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reshape和view的区别"><span class="nav-number">2.</span> <span class="nav-text">reshape和view的区别</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#动机"><span class="nav-number">1.</span> <span class="nav-text">动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用"><span class="nav-number">2.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#公式推导"><span class="nav-number">3.</span> <span class="nav-text">公式推导</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两种模式"><span class="nav-number">4.</span> <span class="nav-text">两种模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码验证："><span class="nav-number">5.</span> <span class="nav-text">代码验证：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BN变种"><span class="nav-number">6.</span> <span class="nav-text">BN变种</span></a></li></ol></div>
             
 
           </div>
